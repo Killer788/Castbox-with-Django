@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'django_filters',
 
     # My Apps:
-
+    'content.apps.ContentConfig',
+    'log.apps.LogConfig',
+    'member_area.apps.MemberAreaConfig',
+    'user_activities.apps.UserActivitiesConfig',
 ]
 
 MIDDLEWARE = [
