@@ -5,6 +5,22 @@ from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive
 
 # Create your models here.
 class User(BaseModelWithIsActive):
+    GENDER_CHOICES = (
+        ('Male', 'Male'),
+        ('Female', 'Female'),
+        ('Other', 'Other'),
+    )
+    AGE_CHOICES = (
+        ('Hide', 'Hide'),
+        ('Before 1950', 'Before 1950'),
+        ('1950 - 1959', '1950 - 1959'),
+        ('1960 - 1969', '1960 - 1969'),
+        ('1970 - 1979', '1970 - 1979'),
+        ('1980 - 1989', '1980 - 1989'),
+        ('1990 - 1999', '1990 - 1999'),
+        ('After 2000', 'After 2000'),
+    )
+
     username = models.CharField(
         max_length=25,
         unique=True,
@@ -20,13 +36,14 @@ class User(BaseModelWithIsActive):
     )
     gender = models.CharField(
         max_length=10,
-        null=False,
-        blank=False,
+        choices=GENDER_CHOICES,
+        default='Male',
         verbose_name='Gender'
     )
-    age = models.IntegerField(
-        null=False,
-        blank=False,
+    age = models.CharField(
+        max_length=20,
+        choices=AGE_CHOICES,
+        default='Hide',
         verbose_name='Age'
     )
     image_source = models.TextField(null=True, blank=True, verbose_name="Image Source")
