@@ -25,8 +25,8 @@ class ChannelAdmin(admin.ModelAdmin):
 
 @register(ChannelLink)
 class ChannelLinkAdmin(admin.ModelAdmin):
-    list_display = ('id', 'channel', 'link', 'created_at', 'updated_at')
+    list_display = ('id', 'channel', 'social_media', 'link', 'created_at', 'updated_at')
     list_display_links = ('channel',)
-    list_filter = ('channel', 'created_at', 'updated_at')
-    search_fields = ('channel__title', 'link')
+    list_filter = ('channel', 'social_media', 'created_at', 'updated_at')
+    search_fields = ('channel__title', 'social_media', 'link')
 
