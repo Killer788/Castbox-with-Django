@@ -88,7 +88,7 @@ class ChannelLink(models.Model):
         related_name='channel_links',
         null=False,
         blank=False,
-        verbose_name='Channel Link'
+        verbose_name='Channel'
     )
     link = models.TextField(null=False, blank=False, verbose_name="Link")
     created_at = models.DateTimeField(

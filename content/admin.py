@@ -13,5 +13,5 @@ class EpisodeAdmin(admin.ModelAdmin):
     list_display = ('id', 'image_source', 'title', 'channel', 'is_active', 'created_at', 'updated_at')
     list_display_links = ('title',)
     list_editable = ('is_active',)
-    list_filter = ('title', 'channel', 'is_active', 'created_at', 'updated_at')
+    list_filter = ('is_active', 'created_at', 'updated_at')
     search_fields = ('title', 'description', 'channel__title')
