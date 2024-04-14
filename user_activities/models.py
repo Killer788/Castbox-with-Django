@@ -1,29 +1,12 @@
 from django.db import models
-from django.forms import CharField
 
 from member_area.models import User, Channel
 from content.models import Episode
+from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive
 
 
 # Create your models here.
-class BaseModel(models.Model):
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Created At'
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Updated At'
-    )
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        raise NotImplementedError('Please implement __str__ method.')
-
-
-class UserSubscribe(BaseModel):
+class UserSubscribe(BaseModelWithUpdatedAt):
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -54,7 +37,7 @@ class UserSubscribe(BaseModel):
         return f'{self.user.username} subscription to {self.channel.title}'
 
 
-class Comment(BaseModel):
+class Comment(BaseModelWithUpdatedAt):
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -86,7 +69,7 @@ class Comment(BaseModel):
         return self.text
 
 
-class Like(BaseModel):
+class Like(BaseModelWithUpdatedAt):
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -117,8 +100,8 @@ class Like(BaseModel):
         return f'{self.user.username} liked {self.episode.title}'
 
 
-class Playlist(BaseModel):
-    title = CharField(max_length=250, null=False, blank=False, verbose_name='Title')
+class Playlist(BaseModelWithIsActive):
+    title = models.CharField(max_length=250, null=False, blank=False, verbose_name='Title')
     user = models.ForeignKey(
         User,
         on_delete=models.PROTECT,
@@ -126,10 +109,6 @@ class Playlist(BaseModel):
         null=False,
         blank=False,
         verbose_name='User'
-    )
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name='Is active'
     )
 
     class Meta:
@@ -141,7 +120,7 @@ class Playlist(BaseModel):
         return self.title
 
 
-class PlaylistEpisode(BaseModel):
+class PlaylistEpisode(BaseModelWithIsActive):
     playlist = models.ForeignKey(
         Playlist,
         on_delete=models.PROTECT,
@@ -157,10 +136,6 @@ class PlaylistEpisode(BaseModel):
         null=False,
         blank=False,
         verbose_name='Episode'
-    )
-    is_active = models.BooleanField(
-        default=True,
-        verbose_name='Is Active'
     )
 
     class Meta:

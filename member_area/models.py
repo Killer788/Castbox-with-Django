@@ -1,29 +1,10 @@
 from django.db import models
 
+from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive, BaseModelWithTitleAndDescription
+
 
 # Create your models here.
-class BaseModel(models.Model):
-    is_active = models.BooleanField(
-        default=False,
-        verbose_name='Is Active'
-    )
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Created At'
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Updated At'
-    )
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        raise NotImplementedError('Please implement __str__ method.')
-
-
-class User(BaseModel):
+class User(BaseModelWithIsActive):
     username = models.CharField(
         max_length=25,
         unique=True,
@@ -59,9 +40,7 @@ class User(BaseModel):
         return self.username
 
 
-class Channel(BaseModel):
-    title = models.CharField(max_length=250, null=False, blank=False, verbose_name="Title")
-    description = models.TextField(null=False, blank=False, verbose_name="Description")
+class Channel(BaseModelWithTitleAndDescription):
     image_source = models.TextField(null=True, blank=True, verbose_name="Image Source")
     author = models.ForeignKey(
         User,
@@ -81,7 +60,7 @@ class Channel(BaseModel):
         return self.title
 
 
-class ChannelLink(models.Model):
+class ChannelLink(BaseModelWithUpdatedAt):
     channel = models.ForeignKey(
         Channel,
         on_delete=models.PROTECT,
@@ -91,14 +70,6 @@ class ChannelLink(models.Model):
         verbose_name='Channel'
     )
     link = models.TextField(null=False, blank=False, verbose_name="Link")
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Created At'
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True,
-        verbose_name='Updated At'
-    )
 
     class Meta:
         verbose_name = 'Channel Link'

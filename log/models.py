@@ -2,22 +2,10 @@ from django.db import models
 
 from content.models import Episode
 from member_area.models import User, Channel
+from lib.common_base_models import BaseModel
 
 
 # Create your models here.
-class BaseModel(models.Model):
-    created_at = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name='Created At'
-    )
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        raise NotImplementedError('Please Implement __str__ method.')
-
-
 class WatchEpisode(BaseModel):
     user = models.ForeignKey(
         User,
