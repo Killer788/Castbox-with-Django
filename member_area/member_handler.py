@@ -29,8 +29,10 @@ class MemberHandler:
         return True, ''
 
     def sign_in(self):
-        user = User.objects.get(username=self.username, password=self.password)
-        if not user:
-            return "Username or Password is incorrect."
+        try:
+            user = User.objects.get(username=self.username, password=self.password)
 
-        return "Signed in successfully."
+            return "Signed in successfully."
+
+        except User.DoesNotExist:
+            return "Username or Password is incorrect."
