@@ -14,6 +14,7 @@ def sign_up_view(request):
                 username = form.cleaned_data['username']
                 password = form.cleaned_data['password']
                 member_handler = MemberHandler(username=username, password=password)
+                result, message = member_handler.sign_up()
             else:
                 message = 'Password and repeat password fields should be the same.'
     else:

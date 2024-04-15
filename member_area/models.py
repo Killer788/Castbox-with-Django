@@ -6,6 +6,7 @@ from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive
 # Create your models here.
 class User(BaseModelWithIsActive):
     GENDER_CHOICES = (
+        ('Hide', 'Hide'),
         ('Male', 'Male'),
         ('Female', 'Female'),
         ('Other', 'Other'),
@@ -37,7 +38,7 @@ class User(BaseModelWithIsActive):
     gender = models.CharField(
         max_length=10,
         choices=GENDER_CHOICES,
-        default='Male',
+        default='Hide',
         verbose_name='Gender'
     )
     age = models.CharField(
