@@ -27,3 +27,10 @@ class MemberHandler:
             return False, "Username already exists"
 
         return True, ''
+
+    def sign_in(self):
+        user = User.objects.get(username=self.username, password=self.password)
+        if not user:
+            return "Username or Password is incorrect."
+
+        return "Signed in successfully."
