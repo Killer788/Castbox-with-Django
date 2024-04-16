@@ -30,7 +30,7 @@ class WatchEpisode(BaseModel):
         ordering = ('pk',)
 
     def __str__(self):
-        return f'{self.user.name} watched {self.episode.title}'
+        return f'{self.user.username} watched {self.episode.title}'
 
 
 class CheckChannel(BaseModel):
@@ -57,4 +57,4 @@ class CheckChannel(BaseModel):
         ordering = ('pk',)
 
     def __str__(self):
-        return f'{self.user.name} checked {self.channel.title}'
+        return f'{self.user.username} checked {self.channel.title}'

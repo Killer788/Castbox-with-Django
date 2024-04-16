@@ -54,7 +54,7 @@ class User(BaseModelWithIsActive):
         ordering = ('pk',)
 
     def __str__(self):
-        return self.user.name
+        return self.user.username
 
 
 class Channel(BaseModelWithTitleAndDescription):

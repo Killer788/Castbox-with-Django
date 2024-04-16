@@ -11,7 +11,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display_links = ('user', )
     list_editable = ('is_active',)
     list_filter = ('gender', 'is_active', 'created_at', 'updated_at')
-    search_fields = ('user__name', 'age')
+    search_fields = ('user__username', 'age')
 
 
 @register(Channel)
@@ -20,7 +20,7 @@ class ChannelAdmin(admin.ModelAdmin):
     list_display_links = ('title',)
     list_editable = ('is_active',)
     list_filter = ('title', 'author', 'is_active', 'created_at', 'updated_at')
-    search_fields = ('title', 'description', 'author__user__name')
+    search_fields = ('title', 'description', 'author__user__username')
 
 
 @register(ChannelLink)
