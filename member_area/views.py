@@ -7,9 +7,9 @@ from .member_handler import MemberHandler
 
 # Create your views here.
 def sign_up_view(request):
-    form = UserCreationForm()
+    form = SignUpForm()
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
 
