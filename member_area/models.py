@@ -76,7 +76,7 @@ class User(BaseModelWithIsActive, AbstractBaseUser, PermissionsMixin):
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['username', 'password']
+    REQUIRED_FIELDS = ['password']
 
     class Meta:
         verbose_name = 'User'
