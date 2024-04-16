@@ -5,11 +5,9 @@
         <title>Sign Up</title>
     </head>
     <body>
+        <h3>Sign Up</h3>
         <form action="" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <p>{{ message }}</p>
-            <input type="submit" value="Sign Up">
+            {{ form }}
         </form>
     </body>
 </html>
