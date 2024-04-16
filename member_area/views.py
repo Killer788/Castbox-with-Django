@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from django.contrib.auth.forms import UserCreationForm
 
 from .forms import SignUpForm, SignInForm
 from .member_handler import MemberHandler
@@ -7,13 +6,21 @@ from .member_handler import MemberHandler
 
 # Create your views here.
 def sign_up_view(request):
-    form = UserCreationForm()
+    message = ''
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-    context = {'form': form}
-    return render(request, 'member_area/sign_up_form.html', context)
+            if form.cleaned_data['password'] == form.cleaned_data['repeat_password']:
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                member_handler = MemberHandler(username=username, password=password)
+                message = member_handler.sign_up()
+            else:
+                message = 'Password and repeat password fields should be the same.'
+    else:
+        form = SignUpForm()
+
+    return render(request, 'member_area/sign_up_form.html', {'form': form, 'message': message})
 
 
 def sign_in_view(request):

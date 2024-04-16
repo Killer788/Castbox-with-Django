@@ -1,37 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive, BaseModelWithTitleAndDescription
 
 
 # Create your models here.
-class CustomAccountManager(BaseUserManager):
-    def create_user(self, username, password, email, **other_fields):
-        if not email:
-            raise ValueError('You must provide an email address')
-
-        email = self.normalize_email(email)
-        user = self.model(username=username, password=password, email=email, **other_fields)
-        user.set_password(password)
-        user.save()
-
-        return user
-
-    def create_superuser(self, username, password, email, **other_fields):
-        other_fields.setdefault('is_staff', True)
-        other_fields.setdefault('is_superuser', True)
-        other_fields.setdefault('is_active', True)
-
-        if other_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must be assigned to is_staff=True.')
-
-        if other_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must be assigned to is_superuser=True.')
-
-        return self.create_user(username, password, email, **other_fields)
-
-
-class User(BaseModelWithIsActive, AbstractBaseUser, PermissionsMixin):
+class User(BaseModelWithIsActive):
     GENDER_CHOICES = (
         ('Hide', 'Hide'),
         ('Male', 'Male'),
@@ -56,7 +29,12 @@ class User(BaseModelWithIsActive, AbstractBaseUser, PermissionsMixin):
         blank=False,
         verbose_name='Username'
     )
-    email = models.EmailField(unique=True, verbose_name='Email')
+    password = models.CharField(
+        max_length=25,
+        null=False,
+        blank=False,
+        verbose_name='Password'
+    )
     gender = models.CharField(
         max_length=10,
         choices=GENDER_CHOICES,
@@ -70,12 +48,6 @@ class User(BaseModelWithIsActive, AbstractBaseUser, PermissionsMixin):
         verbose_name='Age'
     )
     image_source = models.TextField(null=True, blank=True, verbose_name="Image Source")
-    is_staff = models.BooleanField(default=False, verbose_name="Is Staff")
-
-    objects = CustomAccountManager()
-
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
 
     class Meta:
         verbose_name = 'User'
