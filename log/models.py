@@ -1,14 +1,14 @@
 from django.db import models
 
 from content.models import Episode
-from member_area.models import User, Channel
+from member_area.models import BaseUser, Channel
 from lib.common_base_models import BaseModel
 
 
 # Create your models here.
 class WatchEpisode(BaseModel):
     user = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         related_name='watch_episodes',
         null=False,
@@ -30,12 +30,12 @@ class WatchEpisode(BaseModel):
         ordering = ('pk',)
 
     def __str__(self):
-        return f'{self.user.username} watched {self.episode.title}'
+        return f'{self.user.name} watched {self.episode.title}'
 
 
 class CheckChannel(BaseModel):
     user = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         related_name='check_channels',
         null=False,
@@ -57,4 +57,4 @@ class CheckChannel(BaseModel):
         ordering = ('pk',)
 
     def __str__(self):
-        return f'{self.user.username} checked {self.channel.title}'
+        return f'{self.user.name} checked {self.channel.title}'

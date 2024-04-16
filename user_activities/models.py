@@ -1,6 +1,6 @@
 from django.db import models
 
-from member_area.models import User, Channel
+from member_area.models import BaseUser, Channel
 from content.models import Episode
 from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive
 
@@ -8,7 +8,7 @@ from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive
 # Create your models here.
 class UserSubscribe(BaseModelWithUpdatedAt):
     user = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         related_name='user_subscribes',
         null=False,
@@ -34,12 +34,12 @@ class UserSubscribe(BaseModelWithUpdatedAt):
         ordering = ('pk',)
 
     def __str__(self):
-        return f'{self.user.username} subscription to {self.channel.title}'
+        return f'{self.user.name} subscription to {self.channel.title}'
 
 
 class Comment(BaseModelWithUpdatedAt):
     user = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         related_name='comments',
         null=False,
@@ -71,7 +71,7 @@ class Comment(BaseModelWithUpdatedAt):
 
 class Like(BaseModelWithUpdatedAt):
     user = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         related_name='likes',
         null=False,
@@ -97,13 +97,13 @@ class Like(BaseModelWithUpdatedAt):
         ordering = ('pk',)
 
     def __str__(self):
-        return f'{self.user.username} liked {self.episode.title}'
+        return f'{self.user.name} liked {self.episode.title}'
 
 
 class Playlist(BaseModelWithIsActive):
     title = models.CharField(max_length=250, null=False, blank=False, verbose_name='Title')
     user = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         related_name='playlists',
         null=False,

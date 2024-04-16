@@ -1,6 +1,10 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive, BaseModelWithTitleAndDescription
+
+
+BaseUser = get_user_model()
 
 
 # Create your models here.
@@ -22,18 +26,13 @@ class User(BaseModelWithIsActive):
         ('After 2000', 'After 2000'),
     )
 
-    username = models.CharField(
-        max_length=25,
-        unique=True,
+    user = models.ForeignKey(
+        BaseUser,
+        on_delete=models.PROTECT,
+        related_name='users',
         null=False,
         blank=False,
-        verbose_name='Username'
-    )
-    password = models.CharField(
-        max_length=25,
-        null=False,
-        blank=False,
-        verbose_name='Password'
+        verbose_name='User'
     )
     gender = models.CharField(
         max_length=10,
@@ -55,13 +54,13 @@ class User(BaseModelWithIsActive):
         ordering = ('pk',)
 
     def __str__(self):
-        return self.username
+        return self.user.name
 
 
 class Channel(BaseModelWithTitleAndDescription):
     image_source = models.TextField(null=True, blank=True, verbose_name="Image Source")
     author = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         null=False,
         blank=False,
