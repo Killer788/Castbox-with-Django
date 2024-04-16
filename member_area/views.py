@@ -8,6 +8,10 @@ from .member_handler import MemberHandler
 # Create your views here.
 def sign_up_view(request):
     form = UserCreationForm()
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
     context = {'form': form}
     return render(request, 'member_area/sign_up_form.html', context)
 

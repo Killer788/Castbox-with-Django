@@ -7,7 +7,9 @@
     <body>
         <h3>Sign Up</h3>
         <form action="" method="post">
-            {{ form }}
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Sign Up">
         </form>
     </body>
 </html>
