@@ -52,12 +52,6 @@ class User(BaseModelWithIsActive, AbstractBaseUser, PermissionsMixin):
         blank=False,
         verbose_name='Username'
     )
-    password = models.CharField(
-        max_length=25,
-        null=False,
-        blank=False,
-        verbose_name='Password'
-    )
     gender = models.CharField(
         max_length=10,
         choices=GENDER_CHOICES,
@@ -76,7 +70,6 @@ class User(BaseModelWithIsActive, AbstractBaseUser, PermissionsMixin):
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['password']
 
     class Meta:
         verbose_name = 'User'
