@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
-from .forms import SignUpForm
+from .forms import SignUpForm, EditProfileForm
 from .member_handler import MemberHandler
 from .models import BaseUser
 
@@ -54,3 +55,18 @@ def sign_in_view(request):
 def sign_out_view(request):
     logout(request)
     return redirect('login')
+
+
+@login_required(login_url='login')
+def edit_profile_view(request):
+    message = ''
+    username = request.user.username
+    password = request.user.password
+    member_handler = MemberHandler(username=username, password=password)
+    form = EditProfileForm()
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST)
+        if form.is_valid():
+            pass
+
+    return render(request, 'member_area/edit_profile_form.html', {'form': form, 'message': message})

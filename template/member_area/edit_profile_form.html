@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit Profile</title>
+    </head>
+    <body>
+        <form action="" method="post">
+            {% csrf_token %}
+            <label>
+                Username: <input type="text" name="new_username" value={{ username }}>
+            </label>
+            {{ form.as_p }}
+            <p>{{ message }}</p>
+            <input type="submit" value="Edit Profile">
+        </form>
+    </body>
+</html>
