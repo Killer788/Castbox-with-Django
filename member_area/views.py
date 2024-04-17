@@ -74,7 +74,7 @@ def edit_profile_view(request):
             new_username = request.POST['new_username']
             gender = request.POST['gender']
             age = request.POST['age']
-            member_handler.edit_profile(user=base_user_instance,new_username=new_username, gender=gender, age=age)
+            member_handler.edit_profile(user=base_user_instance, new_username=new_username, gender=gender, age=age)
             message = 'Profile updated successfully.'
 
     context = {'form': form, 'message': message, 'username': username}
