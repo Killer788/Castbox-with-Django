@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Channel, BaseUser
+from user_activities.models import UserSubscribe
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,3 +26,22 @@ class ChannelSerializer(serializers.ModelSerializer):
             'channel_links',
             'episodes',
         )
+
+
+class ChannelTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Channel
+        fields = ('title',)
+
+
+class FollowedChannelsSerializer(serializers.ModelSerializer):
+    channel = ChannelTitleSerializer()
+
+    class Meta:
+        model = UserSubscribe
+        fields = (
+            'channel',
+        )
+
+    def get_username(self):
+        return self.context['request'].user.username

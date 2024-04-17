@@ -8,7 +8,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .forms import SignUpForm, EditProfileForm
 from .member_handler import MemberHandler
 from .models import BaseUser, Channel
-from .serializers import ChannelSerializer
+from .serializers import ChannelSerializer, FollowedChannelsSerializer
+from user_activities.models import UserSubscribe
 
 
 # Create your views here.
@@ -124,3 +125,13 @@ def subscribe_to_channel_view(request):
 
     context = {'titles': titles, 'message': message}
     return render(request, 'member_area/subscribe_form.html', context)
+
+
+class FollowedChannelsViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_instance = FollowedChannelsSerializer()
+
+    serializer_class = FollowedChannelsSerializer
+    username = serializer_instance.get_username()
+    user = BaseUser.objects.get(username=username)
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = UserSubscribe.objects.filter(user=user, is_subscribed=True).all()
