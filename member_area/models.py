@@ -73,6 +73,9 @@ class Channel(BaseModelWithTitleAndDescription):
         verbose_name_plural = 'Channels'
         ordering = ('pk',)
 
+    def get_all_active_channels(self):
+        return Channel.objects.filter(is_active=True).all()
+
     def __str__(self):
         return self.title
 

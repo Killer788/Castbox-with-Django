@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import BaseUser, Channel
+from .models import BaseUser
 
 
 class SignUpForm(UserCreationForm):
@@ -30,22 +30,3 @@ class EditProfileForm(forms.Form):
 
     gender = forms.CharField(label='Gender', widget=forms.Select(choices=GENDER_CHOICES), initial='Hide')
     age = forms.CharField(label='Age', widget=forms.Select(choices=AGE_CHOICES), initial='Hide')
-
-
-class SubscribeForm(forms.Form):
-    try:
-        channel_instances = Channel.objects.filter(is_active=True).all()
-        choose_channel = [('Choose a channel', 'Choose a channel'),]
-        titles = [(channel.title, channel.title) for channel in channel_instances]
-        channel_choices_list = choose_channel + titles
-        CHANNELS_CHOICES = tuple(channel_choices_list)
-    except Exception as e:
-        CHANNELS_CHOICES = (
-            ('No channels to show', 'No channels to show'),
-        )
-
-    channels = forms.CharField(
-        label='Channels',
-        widget=forms.Select(choices=CHANNELS_CHOICES),
-        initial='Choose a channel'
-    )

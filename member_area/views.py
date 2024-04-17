@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, filters, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .forms import SignUpForm, EditProfileForm, SubscribeForm
+from .forms import SignUpForm, EditProfileForm
 from .member_handler import MemberHandler
 from .models import BaseUser, Channel
 from .serializers import ChannelSerializer
@@ -98,26 +98,47 @@ class ChannelViewSet(viewsets.ReadOnlyModelViewSet):
     )
 
 
+# @login_required(login_url='../signin')
+# def subscribe_to_channel_view(request):
+#     message = ''
+#     username = request.user.username
+#     password = request.user.password
+#     member_handler = MemberHandler(username=username, password=password)
+#     form = SubscribeForm()
+#     if request.method == 'POST':
+#         form = SubscribeForm(request.POST)
+#         if form.is_valid() and not request.user.is_superuser:
+#             if (form.cleaned_data['channels'] != 'No channels to show'
+#                     or form.cleaned_data['channels'] != 'Choose a channel'):
+#                 base_user_instance = BaseUser.objects.get(username=username)
+#                 title = form.cleaned_data['channels']
+#                 channel_instance = Channel.objects.get(title=title)
+#                 message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
+#             elif form.cleaned_data['channels'] == 'No channels to show':
+#                 message = 'Nothing happened because there are no channels to Subscribe to or Unsubscribe from.'
+#             elif form.cleaned_data['channels'] != 'Choose a channel':
+#                 message = 'Please choose a channel first.'
+#
+#     context = {'form': form, 'message': message}
+#     return render(request, 'member_area/subscribe_form.html', context)
+
+
 @login_required(login_url='../signin')
 def subscribe_to_channel_view(request):
     message = ''
     username = request.user.username
     password = request.user.password
-    member_handler = MemberHandler(username=username, password=password)
-    form = SubscribeForm()
-    if request.method == 'POST':
-        form = SubscribeForm(request.POST)
-        if form.is_valid() and not request.user.is_superuser:
-            if (form.cleaned_data['channels'] != 'No channels to show'
-                    or form.cleaned_data['channels'] != 'Choose a channel'):
-                base_user_instance = BaseUser.objects.get(username=username)
-                title = form.cleaned_data['channels']
-                channel_instance = Channel.objects.get(title=title)
-                message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
-            elif form.cleaned_data['channels'] == 'No channels to show':
-                message = 'Nothing happened because there are no channels to Subscribe to or Unsubscribe from.'
-            elif form.cleaned_data['channels'] != 'Choose a channel':
-                message = 'Please choose a channel first.'
 
-    context = {'form': form, 'message': message}
+    channel = Channel()
+    channels = channel.get_all_active_channels()
+    titles = [channel.title for channel in channels]
+    if not titles:
+        titles = ['No channels to show.']
+
+    member_handler = MemberHandler(username=username, password=password)
+
+    if request.method == 'POST':
+        pass
+
+    context = {'titles': titles}
     return render(request, 'member_area/subscribe_form.html', context)
