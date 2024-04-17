@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets, filters, permissions
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .forms import SignUpForm, EditProfileForm
+from .forms import SignUpForm, EditProfileForm, SubscribeForm
 from .member_handler import MemberHandler
 from .models import BaseUser, Channel
 from .serializers import ChannelSerializer
@@ -96,3 +96,23 @@ class ChannelViewSet(viewsets.ReadOnlyModelViewSet):
         'title',
         'description',
     )
+
+
+@login_required(login_url='../signin')
+def subscribe_to_channel_view(request):
+    message = ''
+    username = request.user.username
+    password = request.user.password
+    member_handler = MemberHandler(username=username, password=password)
+    form = SubscribeForm()
+    if request.method == 'POST':
+        form = SubscribeForm(request.POST)
+        if form.is_valid() and not request.user.is_superuser:
+            base_user_instance = BaseUser.objects.get(username=username)
+            title = form.cleaned_data['channels']
+            channel_instance = Channel.objects.get(title=title)
+            member_handler.check_subscription()
+            message = 'Profile updated successfully.'
+
+    context = {'form': form, 'message': message}
+    return render(request, 'member_area/edit_profile_form.html', context)
