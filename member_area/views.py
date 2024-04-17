@@ -98,31 +98,6 @@ class ChannelViewSet(viewsets.ReadOnlyModelViewSet):
     )
 
 
-# @login_required(login_url='../signin')
-# def subscribe_to_channel_view(request):
-#     message = ''
-#     username = request.user.username
-#     password = request.user.password
-#     member_handler = MemberHandler(username=username, password=password)
-#     form = SubscribeForm()
-#     if request.method == 'POST':
-#         form = SubscribeForm(request.POST)
-#         if form.is_valid() and not request.user.is_superuser:
-#             if (form.cleaned_data['channels'] != 'No channels to show'
-#                     or form.cleaned_data['channels'] != 'Choose a channel'):
-#                 base_user_instance = BaseUser.objects.get(username=username)
-#                 title = form.cleaned_data['channels']
-#                 channel_instance = Channel.objects.get(title=title)
-#                 message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
-#             elif form.cleaned_data['channels'] == 'No channels to show':
-#                 message = 'Nothing happened because there are no channels to Subscribe to or Unsubscribe from.'
-#             elif form.cleaned_data['channels'] != 'Choose a channel':
-#                 message = 'Please choose a channel first.'
-#
-#     context = {'form': form, 'message': message}
-#     return render(request, 'member_area/subscribe_form.html', context)
-
-
 @login_required(login_url='../signin')
 def subscribe_to_channel_view(request):
     message = ''
@@ -138,13 +113,14 @@ def subscribe_to_channel_view(request):
     member_handler = MemberHandler(username=username, password=password)
 
     if request.method == 'POST':
-        if titles[0] != 'No channels to show':
-            base_user_instance = BaseUser.objects.get(username=username)
-            title = request.POST['channel_titles']
-            channel_instance = Channel.objects.get(title=title)
-            message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
-        else:
-            message = 'No channels in the database. Please create channels to continue.'
+        if not request.user.is_superuser:
+            if titles[0] != 'No channels to show':
+                base_user_instance = BaseUser.objects.get(username=username)
+                title = request.POST['channel_titles']
+                channel_instance = Channel.objects.get(title=title)
+                message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
+            else:
+                message = 'No channels in the database. Please create channels to continue.'
 
     context = {'titles': titles, 'message': message}
     return render(request, 'member_area/subscribe_form.html', context)

@@ -26,7 +26,7 @@ class MemberHandler:
             user=user,
             channel=channel,
         )
-        if created:
+        if not created:
             if user_subscribe.is_subscribed:
                 user_subscribe.is_subscribed = False
                 user_subscribe.save()
