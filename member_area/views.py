@@ -133,12 +133,18 @@ def subscribe_to_channel_view(request):
     channels = channel.get_all_active_channels()
     titles = [channel.title for channel in channels]
     if not titles:
-        titles = ['No channels to show.']
+        titles = ['No channels to show']
 
     member_handler = MemberHandler(username=username, password=password)
 
     if request.method == 'POST':
-        pass
+        if titles[0] != 'No channels to show':
+            base_user_instance = BaseUser.objects.get(username=username)
+            title = request.POST['channel_titles']
+            channel_instance = Channel.objects.get(title=title)
+            message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
+        else:
+            message = 'No channels in the database. Please create channels to continue.'
 
-    context = {'titles': titles}
+    context = {'titles': titles, 'message': message}
     return render(request, 'member_area/subscribe_form.html', context)
