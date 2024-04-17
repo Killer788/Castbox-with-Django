@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 
 from .forms import SignUpForm
 from .member_handler import MemberHandler
+from .models import BaseUser
 
 
 # Create your views here.
@@ -21,8 +22,9 @@ def sign_up_view(request):
                 password = form.cleaned_data['password1']
                 messages.success(request, f'Account was created for {username}')
 
+                base_user_instance = BaseUser.objects.get(username=username)
                 member_handler = MemberHandler(username=username, password=password)
-                member_handler.sign_up(request.user)
+                member_handler.sign_up(user=base_user_instance)
 
                 return redirect('signin')
 
