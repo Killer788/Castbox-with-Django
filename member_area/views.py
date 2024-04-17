@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from rest_framework import viewsets, filters, permissions
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .forms import SignUpForm, EditProfileForm
 from .member_handler import MemberHandler
-from .models import BaseUser
+from .models import BaseUser, Channel
+from .serializers import ChannelSerializer
 
 
 # Create your views here.
@@ -76,3 +79,20 @@ def edit_profile_view(request):
 
     context = {'form': form, 'message': message, 'username': username}
     return render(request, 'member_area/edit_profile_form.html', context)
+
+
+class ChannelViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ChannelSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+    queryset = Channel.objects.filter(is_active=True).all()
+
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+
+    filterset_fields = (
+        'author',
+    )
+    search_fields = (
+        'title',
+        'description',
+        'author',
+    )
