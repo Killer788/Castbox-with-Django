@@ -11,7 +11,17 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ChannelSerializer(serializers.ModelSerializer):
     author = UserSerializer()
+    channel_links = serializers.StringRelatedField(many=True)
+    episodes = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Channel
-        fields = '__all__'
+        fields = (
+            'id',
+            'image_source',
+            'title',
+            'description',
+            'author',
+            'channel_links',
+            'episodes',
+        )
