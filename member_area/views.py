@@ -8,17 +8,21 @@ from .member_handler import MemberHandler
 
 # Create your views here.
 def sign_up_view(request):
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and not request.user.is_superuser:
         print(request.user.username)
-        return redirect('memberarea')
+        return redirect('../')
     else:
         form = SignUpForm()
         if request.method == 'POST':
             form = SignUpForm(request.POST)
             if form.is_valid():
                 form.save()
-                user = form.cleaned_data['username']
-                messages.success(request, f'Account was created for {user}')
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password1']
+                messages.success(request, f'Account was created for {username}')
+
+                member_handler = MemberHandler(username=username, password=password)
+                member_handler.sign_up(request.user)
 
                 return redirect('signin')
 
@@ -27,8 +31,8 @@ def sign_up_view(request):
 
 
 def sign_in_view(request):
-    if request.user.is_authenticated:
-        return redirect('memberarea')
+    if request.user.is_authenticated and not request.user.is_superuser:
+        return redirect('../')
     else:
         if request.method == 'POST':
             username = request.POST['username']
@@ -37,6 +41,7 @@ def sign_in_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                redirect('../')
             else:
                 messages.info(request, 'Username or Password is incorrect.')
 
