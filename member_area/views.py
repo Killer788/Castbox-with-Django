@@ -108,13 +108,16 @@ def subscribe_to_channel_view(request):
     if request.method == 'POST':
         form = SubscribeForm(request.POST)
         if form.is_valid() and not request.user.is_superuser:
-            if form.cleaned_data['channels'] != 'No channels to show':
+            if (form.cleaned_data['channels'] != 'No channels to show'
+                    or form.cleaned_data['channels'] != 'Choose a channel'):
                 base_user_instance = BaseUser.objects.get(username=username)
                 title = form.cleaned_data['channels']
                 channel_instance = Channel.objects.get(title=title)
                 message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
-            else:
-                message = 'Nothing happened because there are no channels to Subscribe of Unsubscribe to.'
+            elif form.cleaned_data['channels'] == 'No channels to show':
+                message = 'Nothing happened because there are no channels to Subscribe to or Unsubscribe from.'
+            elif form.cleaned_data['channels'] != 'Choose a channel':
+                message = 'Please choose a channel first.'
 
     context = {'form': form, 'message': message}
-    return render(request, 'member_area/edit_profile_form.html', context)
+    return render(request, 'member_area/subscribe_form.html', context)

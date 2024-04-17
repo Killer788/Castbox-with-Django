@@ -35,8 +35,10 @@ class EditProfileForm(forms.Form):
 class SubscribeForm(forms.Form):
     try:
         channel_instances = Channel.objects.filter(is_active=True).all()
+        choose_channel = [('Choose a channel', 'Choose a channel'),]
         titles = [(channel.title, channel.title) for channel in channel_instances]
-        CHANNELS_CHOICES = tuple(titles)
+        channel_choices_list = choose_channel + titles
+        CHANNELS_CHOICES = tuple(channel_choices_list)
     except Exception as e:
         CHANNELS_CHOICES = (
             ('No channels to show', 'No channels to show'),
@@ -45,5 +47,5 @@ class SubscribeForm(forms.Form):
     channels = forms.CharField(
         label='Channels',
         widget=forms.Select(choices=CHANNELS_CHOICES),
-        initial=CHANNELS_CHOICES[0][0]
+        initial='Choose a channel'
     )
