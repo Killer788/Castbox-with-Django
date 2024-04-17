@@ -92,7 +92,7 @@ class ChannelViewSet(viewsets.ReadOnlyModelViewSet):
         'author',
     )
     search_fields = (
+        'id',
         'title',
         'description',
-        'author',
     )
