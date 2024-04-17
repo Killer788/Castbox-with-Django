@@ -57,7 +57,7 @@ def sign_out_view(request):
     return redirect('login')
 
 
-@login_required(login_url='login')
+@login_required(login_url='../signin')
 def edit_profile_view(request):
     message = ''
     username = request.user.username
@@ -66,7 +66,13 @@ def edit_profile_view(request):
     form = EditProfileForm()
     if request.method == 'POST':
         form = EditProfileForm(request.POST)
-        if form.is_valid():
-            pass
+        if form.is_valid() and not request.user.is_superuser:
+            base_user_instance = BaseUser.objects.get(username=username)
+            new_username = request.POST['new_username']
+            gender = request.POST['gender']
+            age = request.POST['age']
+            member_handler.edit_profile(user=base_user_instance,new_username=new_username, gender=gender, age=age)
+            message = 'Profile updated successfully.'
 
-    return render(request, 'member_area/edit_profile_form.html', {'form': form, 'message': message})
+    context = {'form': form, 'message': message, 'username': username}
+    return render(request, 'member_area/edit_profile_form.html', context)

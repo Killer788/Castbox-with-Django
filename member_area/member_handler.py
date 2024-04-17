@@ -11,5 +11,11 @@ class MemberHandler:
             user=user,
         )
 
-    def sign_in(self):
-        pass
+    def edit_profile(self, user, new_username, gender, age):
+        user.username = new_username
+        user.save()
+
+        user_profile = User.objects.get(user=user)
+        user_profile.gender = gender
+        user_profile.age = age
+        user_profile.save()
