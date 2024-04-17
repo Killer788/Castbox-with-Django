@@ -108,10 +108,13 @@ def subscribe_to_channel_view(request):
     if request.method == 'POST':
         form = SubscribeForm(request.POST)
         if form.is_valid() and not request.user.is_superuser:
-            base_user_instance = BaseUser.objects.get(username=username)
-            title = form.cleaned_data['channels']
-            channel_instance = Channel.objects.get(title=title)
-            message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
+            if form.cleaned_data['channels'] != 'No channels to show':
+                base_user_instance = BaseUser.objects.get(username=username)
+                title = form.cleaned_data['channels']
+                channel_instance = Channel.objects.get(title=title)
+                message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
+            else:
+                message = 'Nothing happened because there are no channels to Subscribe of Unsubscribe to.'
 
     context = {'form': form, 'message': message}
     return render(request, 'member_area/edit_profile_form.html', context)
