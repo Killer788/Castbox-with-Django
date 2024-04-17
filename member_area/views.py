@@ -111,8 +111,7 @@ def subscribe_to_channel_view(request):
             base_user_instance = BaseUser.objects.get(username=username)
             title = form.cleaned_data['channels']
             channel_instance = Channel.objects.get(title=title)
-            member_handler.check_subscription()
-            message = 'Profile updated successfully.'
+            message = member_handler.check_subscription(user=base_user_instance, channel=channel_instance)
 
     context = {'form': form, 'message': message}
     return render(request, 'member_area/edit_profile_form.html', context)
