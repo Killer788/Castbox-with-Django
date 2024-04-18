@@ -9,7 +9,7 @@ channel_router = routers.DefaultRouter()
 channel_router.register('', ChannelViewSet)
 
 followed_channels_router = routers.DefaultRouter()
-followed_channels_router.register('', FollowedChannelsViewSet)
+followed_channels_router.register('', FollowedChannelsViewSet, basename='followed_channels')
 
 
 urlpatterns = [

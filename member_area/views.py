@@ -128,10 +128,10 @@ def subscribe_to_channel_view(request):
 
 
 class FollowedChannelsViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_instance = FollowedChannelsSerializer()
-
     serializer_class = FollowedChannelsSerializer
-    username = serializer_instance.get_username()
-    user = BaseUser.objects.get(username=username)
     permission_classes = (permissions.IsAuthenticated,)
-    queryset = UserSubscribe.objects.filter(user=user, is_subscribed=True).all()
+
+    def get_queryset(self):
+        username = self.request.user.username
+        user = BaseUser.objects.get(username=username)
+        return UserSubscribe.objects.filter(user=user, is_subscribed=True).all()

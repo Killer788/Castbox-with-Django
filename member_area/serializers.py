@@ -42,6 +42,3 @@ class FollowedChannelsSerializer(serializers.ModelSerializer):
         fields = (
             'channel',
         )
-
-    def get_username(self):
-        return self.context['request'].user.username
