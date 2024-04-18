@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -10,6 +11,7 @@ from .member_handler import MemberHandler
 from .models import BaseUser, Channel
 from .serializers import ChannelSerializer, FollowedChannelsSerializer
 from user_activities.models import UserSubscribe
+from content.models import Episode
 
 
 # Create your views here.
@@ -85,7 +87,8 @@ def edit_profile_view(request):
 class ChannelViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ChannelSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    queryset = Channel.objects.filter(is_active=True).all()
+    queryset = Channel.objects.prefetch_related(
+        Prefetch('episodes', queryset=Episode.objects.filter(is_active=True).all())).filter(is_active=True).all()
 
     filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
 
