@@ -86,10 +86,13 @@ def add_link_view(request):
     if request.method == 'POST':
         form = AddLinkForm(request.POST)
         if form.is_valid() and not request.user.is_superuser:
-            channel_title = request.POST['channel_titles']
-            link = form.cleaned_data['link']
-            social_media = request.POST['social_media']
-            message = content_handler.add_link(channel_title=channel_title, social_media=social_media, link=link)
+            if titles[0] != 'No channels to show':
+                channel_title = request.POST['channel_titles']
+                link = form.cleaned_data['link']
+                social_media = request.POST['social_media']
+                message = content_handler.add_link(channel_title=channel_title, social_media=social_media, link=link)
+            else:
+                message = 'No channels in the database. Please create channels to continue.'
         else:
             message = 'This action is unavailable for the admin'
 
