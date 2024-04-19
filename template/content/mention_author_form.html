@@ -8,7 +8,7 @@
         <form action="" method="post">
             {% csrf_token %}
             <label for="episode_titles">
-                Your Channels:
+                Your Channel Episodes:
                 <select name="episode_titles">
                     {% for title in titles %}
                         <option value="{{ title }}">{{ title }}</option>
@@ -17,7 +17,7 @@
             </label>
             <br>
             <label for="author_username">
-                Social Media:
+                Authors:
                 <select name="author_username">
                     {% for author in authors %}
                         <option value="{{ author }}">{{ author }}</option>
