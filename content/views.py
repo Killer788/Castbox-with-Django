@@ -97,13 +97,39 @@ def add_episode_view(request):
 
 
 @login_required(login_url='../../../../memberarea/signin')
-def mention_author_view(request, message):
-    return HttpResponse(message)
+def mention_author_view(request):
+    return HttpResponse(request.session['channel_title'])
 
 
 @login_required(login_url='../../../memberarea')
 def choose_channel_to_add_episode_view(request):
-    return redirect('mention_author', message='hi')
+    message = ''
+    username = request.user.username
+    user = BaseUser.objects.get(username=username)
+
+    channel = Channel()
+    channels = channel.get_all_active_channels()
+    user_channels = list()
+    for channel in channels:
+        if channel.author == user:
+            user_channels.append(channel)
+
+    titles = [channel.title for channel in user_channels]
+    if not titles:
+        titles = ['No channels to show']
+    if request.method == 'POST':
+        if not request.user.is_superuser:
+            if titles[0] != 'No channels to show':
+                request.session['channel_title'] = request.POST['channel_titles']
+                return redirect('mention_author')
+            else:
+                message = 'No channels in the database. Please create channels to continue.'
+
+        else:
+            message = 'This action is unavailable for the admin'
+
+    context = {'titles': titles, 'message': message}
+    return render(request, 'content/choose_channel_form.html', context)
 
 
 @login_required(login_url='../../../memberarea/signin')
