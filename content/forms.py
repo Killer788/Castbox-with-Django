@@ -1,7 +1,7 @@
 from django import forms
 
 
-class ChannelAreaActionForm(forms.ModelForm):
+class ChannelAreaActionForm(forms.Form):
     ACTION_CHOICES = (
         ('create_channel', 'Create A New Channel'),
         ('add_episode', 'Add Episodes To A Channel'),
