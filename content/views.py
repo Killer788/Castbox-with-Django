@@ -94,7 +94,7 @@ def mention_author_view(request):
 
 
 @login_required(login_url='../../../memberarea')
-def choose_channel_to_add_episode_view(request):
+def choose_channel_to_mention_author_view(request):
     message = ''
     username = request.user.username
     user = BaseUser.objects.get(username=username)
