@@ -8,6 +8,7 @@ from lib.common_base_models import BaseModelWithTitleAndDescription, BaseModelWi
 class Episode(BaseModelWithTitleAndDescription):
     # image = models.ImageField(upload_to='./Images/Episodes/', null=True, blank=True, verbose_name="Image")
     image_source = models.TextField(null=True, blank=True, verbose_name="Image Source")
+    title = models.CharField(max_length=100, null=False, blank=False, verbose_name="Title")
     channel = models.ForeignKey(Channel, on_delete=models.PROTECT, related_name='episodes', verbose_name="Channel")
     play_link = models.TextField(null=False, blank=False, verbose_name="Play Link")
 

@@ -28,19 +28,20 @@ class ContentHandler:
 
     def add_episode(self, channel_title, episode_title, episode_description, episode_play_link):
         channel = Channel.objects.get(title=channel_title)
+        channel_episodes = channel.episodes
+        episode_titles = [episode.title for episode in channel_episodes]
+        if episode_title in episode_titles:
+            return ('An episode with this name already exists in the selected channel.'
+                    'Please choose another name for the episode')
 
-        try:
-            Episode.objects.create(
-                title=episode_title,
-                description=episode_description,
-                channel=channel,
-                play_link=episode_play_link,
-            )
+        Episode.objects.create(
+            title=episode_title,
+            description=episode_description,
+            channel=channel,
+            play_link=episode_play_link,
+        )
 
-            return 'Episode added to your channel successfully'
-        except IntegrityError:
-            return ('An episode this name already exists in the selected channel.'
-                    ' Please choose another name for the episode')
+        return 'Episode added to your channel successfully'
 
     def get_user_channels(self):
         channel = Channel()
@@ -56,3 +57,5 @@ class ContentHandler:
         titles = [channel.title for channel in channels]
         if not titles:
             titles = ['No channels to show']
+
+        return titles
