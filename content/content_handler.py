@@ -1,4 +1,5 @@
 from member_area.models import Channel, ChannelLink
+from django.db.utils import IntegrityError
 
 
 class ContentHandler:
@@ -6,11 +7,14 @@ class ContentHandler:
         self.user = user
 
     def create_channel(self, title, description):
-        channel, created = Channel.objects.get_or_create(title=title, description=description, author=self.user)
-        if created:
-            return 'Channel created successfully'
+        try:
+            channel, created = Channel.objects.get_or_create(title=title, description=description, author=self.user)
+            if created:
+                return 'Channel created successfully'
 
-        return 'Channel already exists'
+            return 'Channel already exists'
+        except IntegrityError:
+            return 'Channel already exists'
 
     def add_link(self, channel_title, social_media, link):
         channel = Channel.objects.get(title=channel_title)

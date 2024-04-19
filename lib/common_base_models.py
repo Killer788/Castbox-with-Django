@@ -41,7 +41,7 @@ class BaseModelWithIsActive(BaseModelWithUpdatedAt):
 
 
 class BaseModelWithTitleAndDescription(BaseModelWithIsActive):
-    title = models.CharField(max_length=100, null=False, blank=False, verbose_name="Title")
+    title = models.CharField(max_length=100, null=False, blank=False, verbose_name="Title", unique=True)
     description = models.TextField(null=False, blank=False, verbose_name="Description")
 
     class Meta:
