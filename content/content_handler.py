@@ -29,7 +29,8 @@ class ContentHandler:
     def add_episode(self, channel_title, episode_title, episode_description, episode_play_link):
         channel = Channel.objects.get(title=channel_title)
         channel_episodes = channel.episodes
-        episode_titles = [episode.title for episode in channel_episodes]
+        channel_episode_objects = channel_episodes.all()
+        episode_titles = [episode.title for episode in channel_episode_objects]
         if episode_title in episode_titles:
             return ('An episode with this name already exists in the selected channel.'
                     'Please choose another name for the episode')
