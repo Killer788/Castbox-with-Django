@@ -60,7 +60,7 @@ def sign_in_view(request):
 
 def sign_out_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('signin')
 
 
 @login_required(login_url='../signin')
