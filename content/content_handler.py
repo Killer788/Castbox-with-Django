@@ -1,7 +1,8 @@
 from django.db.utils import IntegrityError
 
 from member_area.models import Channel, ChannelLink
-from .models import Episode
+from .models import Episode, EpisodeOtherAuthor
+from member_area.models import BaseUser
 
 
 class ContentHandler:
@@ -60,3 +61,13 @@ class ContentHandler:
             titles = ['No channels to show']
 
         return titles
+
+    def mention_author(self, channel,  author_username, episode_title):
+        author = BaseUser.objects.get(username=author_username)
+        episode = Episode.objects.get(channel=channel, title=episode_title)
+
+        mention_object, created = EpisodeOtherAuthor.objects.get_or_create(author=author, episode=episode)
+        if created:
+            return 'This author is already mentioned for this episode'
+
+        return 'Author mentioned successfully'

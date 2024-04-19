@@ -90,7 +90,51 @@ def add_episode_view(request):
 
 @login_required(login_url='../../../../memberarea/signin')
 def mention_author_view(request):
-    return HttpResponse(request.session['channel_title'])
+    try:
+        channel_title = request.session['channel_title']
+        if channel_title == '':
+            raise KeyError
+    except KeyError:
+        return redirect('choose_your_channel')
+
+    message = ''
+    username = request.user.username
+    user = BaseUser.objects.get(username=username)
+    content_handler = ContentHandler(user=user)
+
+    channel = Channel.objects.get(title=channel_title)
+    channel_episodes = channel.episodes
+    channel_episode_objects = channel_episodes.all()
+    titles = [episode.title for episode in channel_episode_objects]
+    if not titles:
+        titles = ['No episodes to show']
+
+    author_objects = BaseUser.objects.all()
+    authors = [author.username for author in author_objects]
+    if not authors:
+        authors = ['No authors to show']
+
+    if request.method == 'POST':
+        if not request.user.is_superuser:
+            if titles[0] != 'No episodes to show' and authors[0] != 'No authors to show':
+                episode_title = request.POST['episode_titles']
+                author_username = request.POST['author_usernames']
+                message = content_handler.mention_author(
+                    channel=channel,
+                    author_username=author_username,
+                    episode_title=episode_title
+                )
+
+                request.session['channel_title'] = ''
+                redirect('choose_your_channel')
+            else:
+                message = 'Please make sure that there are authors and episodes to choose from'
+
+        else:
+            message = 'This action is unavailable for the admin'
+
+    context = {'titles': titles, 'authors': authors, 'message': message}
+    return render(request, 'content/mention_author_form.html', context)
 
 
 @login_required(login_url='../../../memberarea')

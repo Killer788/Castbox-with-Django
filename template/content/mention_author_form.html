@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Mention Author for Your Episode</title>
+    </head>
+    <body>
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="episode_titles">
+                Your Channels:
+                <select name="episode_titles">
+                    {% for title in titles %}
+                        <option value="{{ title }}">{{ title }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <br>
+            <label for="author_username">
+                Social Media:
+                <select name="author_username">
+                    {% for author in authors %}
+                        <option value="{{ author }}">{{ author }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <p>{{ message }}</p>
+            <input type="submit" value="Mention Author">
+        </form>
+    </body>
+</html>
