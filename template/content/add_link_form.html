@@ -8,13 +8,16 @@
         <form action="" method="post">
             {% csrf_token %}
             <label for="channel_titles">
+                Your Channels:
                 <select name="channel_titles">
                     {% for title in titles %}
                         <option value="{{ title }}">{{ title }}</option>
                     {% endfor %}
                 </select>
             </label>
+            <br>
             <label for="social_media">
+                Social Media:
                 <select name="social_media">
                     {% for social_media in media %}
                         <option value="{{ social_media }}">{{ social_media }}</option>

@@ -8,6 +8,7 @@
         <form action="" method="post">
             {% csrf_token %}
             <label for="channel_titles">
+                Channels:
                 <select name="channel_titles">
                     {% for title in titles %}
                         <option value="{{ title }}">{{ title }}</option>

@@ -97,5 +97,5 @@ def add_link_view(request):
             message = 'This action is unavailable for the admin'
 
     context = {'titles': titles, 'media': media, 'form': form, 'message': message}
-    return render(request, 'content')
+    return render(request, 'content/add_link_form.html', context)
 
