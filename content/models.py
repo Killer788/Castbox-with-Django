@@ -1,6 +1,6 @@
 from django.db import models
 
-from member_area.models import Channel, User
+from member_area.models import Channel, BaseUser
 from lib.common_base_models import BaseModelWithTitleAndDescription, BaseModelWithUpdatedAt
 
 
@@ -30,10 +30,18 @@ class EpisodeOtherAuthor(BaseModelWithUpdatedAt):
         verbose_name="Episode",
     )
     author = models.ForeignKey(
-        User,
+        BaseUser,
         on_delete=models.PROTECT,
         related_name='episode_other_authors',
         null=False,
         blank=False,
         verbose_name="Author",
     )
+
+    class Meta:
+        verbose_name = "Episode Other Author"
+        verbose_name_plural = "Episode Other Authors"
+        ordering = ('pk',)
+
+    def __str__(self):
+        return self.author.username
