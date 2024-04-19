@@ -15,3 +15,7 @@ class ChannelAreaActionForm(forms.Form):
 class CreateChannelForm(forms.Form):
     title = forms.CharField(label='Title', max_length=100)
     description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Description...'}),)
+
+
+class AddLinkForm(forms.Form):
+    link = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Link...'}),)

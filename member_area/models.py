@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from lib.common_base_models import BaseModelWithUpdatedAt, BaseModelWithIsActive, BaseModelWithTitleAndDescription
 
@@ -81,13 +82,6 @@ class Channel(BaseModelWithTitleAndDescription):
 
 
 class ChannelLink(BaseModelWithUpdatedAt):
-    SOCIAL_MEDIA_CHOICES = (
-        ('Instagram', 'Instagram'),
-        ('Twitter', 'Twitter'),
-        ('Telegram', 'Telegram'),
-        ('Discord', 'Discord'),
-        ('Youtube', 'Youtube'),
-    )
     channel = models.ForeignKey(
         Channel,
         on_delete=models.PROTECT,
@@ -98,7 +92,7 @@ class ChannelLink(BaseModelWithUpdatedAt):
     )
     social_media = models.CharField(
         max_length=10,
-        choices=SOCIAL_MEDIA_CHOICES,
+        choices=settings.SOCIAL_MEDIA_CHOICES,
         default='Instagram',
         verbose_name="Social Media"
     )

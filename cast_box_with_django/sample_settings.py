@@ -7,3 +7,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 ADMIN_PATH = ''
+
+SOCIAL_MEDIA_CHOICES = (
+    ('', ''),
+)

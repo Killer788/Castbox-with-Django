@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Add New Link To Your Channel</title>
+    </head>
+    <body>
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="channel_titles">
+                <select name="channel_titles">
+                    {% for title in titles %}
+                        <option value="{{ title }}">{{ title }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label for="social_media">
+                <select name="social_media">
+                    {% for social_media in media %}
+                        <option value="{{ social_media }}">{{ social_media }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            {{ form.as_p }}
+            <p>{{ message }}</p>
+            <input type="submit" value="Add Link">
+        </form>
+    </body>
+</html>
