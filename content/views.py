@@ -57,19 +57,11 @@ def add_episode_view(request):
     message = ''
     username = request.user.username
     user = BaseUser.objects.get(username=username)
-
-    channel = Channel()
-    channels = channel.get_all_active_channels()
-    user_channels = list()
-    for channel in channels:
-        if channel.author == user:
-            user_channels.append(channel)
-
-    titles = [channel.title for channel in user_channels]
-    if not titles:
-        titles = ['No channels to show']
-
     content_handler = ContentHandler(user=user)
+
+    user_channels = content_handler.get_user_channels()
+    titles = content_handler.get_channel_titles(channels=user_channels)
+
     form = AddEpisodeForm()
     if request.method == 'POST':
         form = AddEpisodeForm(request.POST)
@@ -106,17 +98,11 @@ def choose_channel_to_add_episode_view(request):
     message = ''
     username = request.user.username
     user = BaseUser.objects.get(username=username)
+    content_handler = ContentHandler(user=user)
 
-    channel = Channel()
-    channels = channel.get_all_active_channels()
-    user_channels = list()
-    for channel in channels:
-        if channel.author == user:
-            user_channels.append(channel)
+    user_channels = content_handler.get_user_channels()
+    titles = content_handler.get_channel_titles(channels=user_channels)
 
-    titles = [channel.title for channel in user_channels]
-    if not titles:
-        titles = ['No channels to show']
     if request.method == 'POST':
         if not request.user.is_superuser:
             if titles[0] != 'No channels to show':
@@ -137,21 +123,12 @@ def add_link_view(request):
     message = ''
     username = request.user.username
     user = BaseUser.objects.get(username=username)
+    content_handler = ContentHandler(user=user)
 
-    channel = Channel()
-    channels = channel.get_all_active_channels()
-    user_channels = list()
-    for channel in channels:
-        if channel.author == user:
-            user_channels.append(channel)
-
-    titles = [channel.title for channel in user_channels]
-    if not titles:
-        titles = ['No channels to show']
-
+    user_channels = content_handler.get_user_channels()
+    titles = content_handler.get_channel_titles(channels=user_channels)
     media = [media[0] for media in settings.SOCIAL_MEDIA_CHOICES]
 
-    content_handler = ContentHandler(user=user)
     form = AddLinkForm()
     if request.method == 'POST':
         form = AddLinkForm(request.POST)
@@ -168,4 +145,3 @@ def add_link_view(request):
 
     context = {'titles': titles, 'media': media, 'form': form, 'message': message}
     return render(request, 'content/add_link_form.html', context)
-

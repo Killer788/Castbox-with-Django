@@ -41,3 +41,18 @@ class ContentHandler:
         except IntegrityError:
             return ('An episode this name already exists in the selected channel.'
                     ' Please choose another name for the episode')
+
+    def get_user_channels(self):
+        channel = Channel()
+        channels = channel.get_all_active_channels()
+        user_channels = list()
+        for channel in channels:
+            if channel.author == self.user:
+                user_channels.append(channel)
+
+        return user_channels
+
+    def get_channel_titles(self, channels):
+        titles = [channel.title for channel in channels]
+        if not titles:
+            titles = ['No channels to show']
