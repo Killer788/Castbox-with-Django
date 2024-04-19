@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
@@ -21,7 +21,7 @@ def channel_area_action_view(request):
             elif data == 'add_episode':
                 return redirect('add_episode')
             elif data == 'mention_author':
-                return redirect('mention_author')
+                return redirect('choose_your_channel')
             elif data == 'add_link':
                 return redirect('add_link')
         else:
@@ -96,9 +96,14 @@ def add_episode_view(request):
     return render(request, 'content/add_episode_form.html', context)
 
 
-@login_required(login_url='../../../memberarea/signin')
-def mention_author_view(request):
-    pass
+@login_required(login_url='../../../../memberarea/signin')
+def mention_author_view(request, message):
+    return HttpResponse(message)
+
+
+@login_required(login_url='../../../memberarea')
+def choose_channel_to_add_episode_view(request):
+    return redirect('mention_author', message='hi')
 
 
 @login_required(login_url='../../../memberarea/signin')
