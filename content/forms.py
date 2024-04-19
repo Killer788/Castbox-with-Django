@@ -19,3 +19,7 @@ class CreateChannelForm(forms.Form):
 
 class AddLinkForm(forms.Form):
     link = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Link...'}),)
+
+
+class AddEpisodeForm(CreateChannelForm):
+    play_link = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Play Link...'}),)

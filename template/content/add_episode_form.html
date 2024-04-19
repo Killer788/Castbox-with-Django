@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Add New Episode To Your Channel</title>
+    </head>
+    <body>
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="channel_titles">
+                Your Channels:
+                <select name="channel_titles">
+                    {% for title in titles %}
+                        <option value="{{ title }}">{{ title }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            {{ form.as_p }}
+            <p>{{ message }}</p>
+            <input type="submit" value="Add Episode">
+        </form>
+    </body>
+</html>

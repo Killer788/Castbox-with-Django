@@ -1,5 +1,7 @@
-from member_area.models import Channel, ChannelLink
 from django.db.utils import IntegrityError
+
+from member_area.models import Channel, ChannelLink
+from .models import Episode
 
 
 class ContentHandler:
@@ -8,7 +10,7 @@ class ContentHandler:
 
     def create_channel(self, title, description):
         try:
-            channel = Channel.objects.create(title=title, description=description, author=self.user)
+            Channel.objects.create(title=title, description=description, author=self.user)
             
             return 'Channel created successfully'
 
@@ -23,3 +25,18 @@ class ContentHandler:
             return 'Link added to your channel successfully'
 
         return 'This link already exists'
+
+    def add_episode(self, channel_title, episode_title, episode_description, episode_play_link):
+        channel = Channel.objects.get(title=channel_title)
+
+        try:
+            Episode.objects.create(
+                title=episode_title,
+                description=episode_description,
+                channel=channel,
+                play_link=episode_play_link,
+            )
+
+            return 'Episode added to your channel successfully'
+        except IntegrityError:
+            return 'Channel already exists'

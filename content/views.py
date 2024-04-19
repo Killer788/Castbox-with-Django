@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from .forms import ChannelAreaActionForm, CreateChannelForm, AddLinkForm
+from .forms import ChannelAreaActionForm, CreateChannelForm, AddLinkForm, AddEpisodeForm
 from member_area.models import BaseUser, Channel
 from .content_handler import ContentHandler
 
@@ -54,7 +54,46 @@ def create_channel_view(request):
 
 @login_required(login_url='../../../memberarea/signin')
 def add_episode_view(request):
-    pass
+    message = ''
+    username = request.user.username
+    user = BaseUser.objects.get(username=username)
+
+    channel = Channel()
+    channels = channel.get_all_active_channels()
+    user_channels = list()
+    for channel in channels:
+        if channel.author == user:
+            user_channels.append(channel)
+
+    titles = [channel.title for channel in user_channels]
+    if not titles:
+        titles = ['No channels to show']
+
+    content_handler = ContentHandler(user=user)
+    form = AddEpisodeForm()
+    if request.method == 'POST':
+        form = AddEpisodeForm(request.POST)
+        if form.is_valid() and not request.user.is_superuser:
+            if titles[0] != 'No channels to show':
+                channel_title = request.POST['channel_titles']
+                episode_title = form.cleaned_data['title']
+                episode_description = form.cleaned_data['description']
+                episode_play_link = form.cleaned_data['play_link']
+
+                message = content_handler.add_episode(
+                    channel_title=channel_title,
+                    episode_title=episode_title,
+                    episode_description=episode_description,
+                    episode_play_link=episode_play_link,
+                )
+            else:
+                message = 'No channels in the database. Please create channels to continue.'
+
+        else:
+            message = 'This action is unavailable for the admin'
+
+    context = {'titles': titles, 'form': form, 'message': message}
+    return render(request, 'content/add_episode_form.html', context)
 
 
 @login_required(login_url='../../../memberarea/signin')
