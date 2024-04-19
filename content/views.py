@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 from .forms import ChannelAreaActionForm, CreateChannelForm
 from member_area.models import BaseUser
-from content_handler import ContentHandler
+from .content_handler import ContentHandler
 
 
 # Create your views here.
