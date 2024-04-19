@@ -22,4 +22,5 @@ from django.conf import settings
 urlpatterns = [
     path(f'{settings.ADMIN_PATH}', admin.site.urls),
     path('memberarea/', include('member_area.urls')),
+    path('content/', include('content.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT,)
