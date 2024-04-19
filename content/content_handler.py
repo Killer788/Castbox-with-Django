@@ -8,11 +8,10 @@ class ContentHandler:
 
     def create_channel(self, title, description):
         try:
-            channel, created = Channel.objects.get_or_create(title=title, description=description, author=self.user)
-            if created:
-                return 'Channel created successfully'
+            channel = Channel.objects.create(title=title, description=description, author=self.user)
+            
+            return 'Channel created successfully'
 
-            return 'Channel already exists'
         except IntegrityError:
             return 'Channel already exists'
 
