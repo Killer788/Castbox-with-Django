@@ -11,11 +11,11 @@ class ContentHandler:
     def create_channel(self, title, description):
         try:
             Channel.objects.create(title=title, description=description, author=self.user)
-            
+
             return 'Channel created successfully'
 
         except IntegrityError:
-            return 'Channel already exists'
+            return 'You already have a channel with this name.'
 
     def add_link(self, channel_title, social_media, link):
         channel = Channel.objects.get(title=channel_title)
@@ -39,4 +39,5 @@ class ContentHandler:
 
             return 'Episode added to your channel successfully'
         except IntegrityError:
-            return 'Channel already exists'
+            return ('An episode this name already exists in the selected channel.'
+                    ' Please choose another name for the episode')
