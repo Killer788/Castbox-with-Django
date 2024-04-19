@@ -18,6 +18,8 @@ def channel_area_action_view(request):
                 return redirect('add_episode')
             elif data == 'mention_author':
                 return redirect('mention_author')
+            elif data == 'add_link':
+                return redirect('add_link')
 
     context = {'form': form}
     return render(request, 'content/channel_area_action_form.html', context)
@@ -35,4 +37,9 @@ def add_episode_view(request):
 
 @login_required(login_url='../../../memberarea/signin')
 def mention_author_view(request):
+    pass
+
+
+@login_required(login_url='../../../memberarea/signin')
+def add_link_view(request):
     pass
