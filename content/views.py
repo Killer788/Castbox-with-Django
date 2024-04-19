@@ -79,7 +79,7 @@ def add_link_view(request):
     if not titles:
         titles = ['No channels to show']
 
-    media = [media[0][0] for media in settings.SOCIAL_MEDIA_CHOICES]
+    media = [media[0] for media in settings.SOCIAL_MEDIA_CHOICES]
 
     content_handler = ContentHandler(user=user)
     form = AddLinkForm()
