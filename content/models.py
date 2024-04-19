@@ -1,7 +1,7 @@
 from django.db import models
 
-from member_area.models import Channel
-from lib.common_base_models import BaseModelWithTitleAndDescription
+from member_area.models import Channel, User
+from lib.common_base_models import BaseModelWithTitleAndDescription, BaseModelWithUpdatedAt
 
 
 # Create your models here.
@@ -18,3 +18,22 @@ class Episode(BaseModelWithTitleAndDescription):
 
     def __str__(self):
         return self.title
+
+
+class EpisodeOtherAuthor(BaseModelWithUpdatedAt):
+    episode = models.ForeignKey(
+        Episode,
+        on_delete=models.PROTECT,
+        related_name='episode_other_authors',
+        null=False,
+        blank=False,
+        verbose_name="Episode",
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name='episode_other_authors',
+        null=False,
+        blank=False,
+        verbose_name="Author",
+    )
