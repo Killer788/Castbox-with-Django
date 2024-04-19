@@ -10,3 +10,8 @@ class ChannelAreaActionForm(forms.Form):
     )
 
     actions = forms.CharField(label='Actions', widget=forms.Select(choices=ACTION_CHOICES), initial='create_channel')
+
+
+class CreateChannelForm(forms.Form):
+    title = forms.CharField(label='Title', max_lenth=250)
+    description = forms.CharField(label='Description', widget=forms.Textarea)

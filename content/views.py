@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from .forms import ChannelAreaActionForm
+from .forms import ChannelAreaActionForm, CreateChannelForm
+from member_area.models import BaseUser
+from content_handler import ContentHandler
 
 
 # Create your views here.
@@ -27,7 +29,23 @@ def channel_area_action_view(request):
 
 @login_required(login_url='../../../memberarea/signin')
 def create_channel_view(request):
-    pass
+    message = ''
+    username = request.user.username
+    user = BaseUser.objects.get(username=username)
+    content_handler = ContentHandler(user=user)
+
+    form = CreateChannelForm()
+    if request.method == 'POST':
+        form = CreateChannelForm(request.POST)
+        if form.is_valid() and not request.user.is_superuser:
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            message = content_handler.create_channel(title=title, description=description)
+        else:
+            message = 'This action is unavailable for the admin'
+
+    context = {'form': form, 'message': message}
+    return render(request, 'content/create_channel_form.html', context)
 
 
 @login_required(login_url='../../../memberarea/signin')
