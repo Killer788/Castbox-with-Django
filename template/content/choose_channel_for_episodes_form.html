@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Choose one of the channels</title>
+    </head>
+    <body>
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="channel_titles">
+                Channels:
+                <select name="channel_titles">
+                    {% for title in titles %}
+                        <option value="{{ title }}">{{ title }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <p>{{ message }}</p>
+            <input type="submit" value="Show Episodes">
+        </form>
+    </body>
+</html>

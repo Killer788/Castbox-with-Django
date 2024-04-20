@@ -137,7 +137,7 @@ def mention_author_view(request):
     return render(request, 'content/mention_author_form.html', context)
 
 
-@login_required(login_url='../../../memberarea')
+@login_required(login_url='../../../memberarea/signin')
 def choose_channel_to_mention_author_view(request):
     message = ''
     username = request.user.username
@@ -189,3 +189,31 @@ def add_link_view(request):
 
     context = {'titles': titles, 'media': media, 'form': form, 'message': message}
     return render(request, 'content/add_link_form.html', context)
+
+
+@login_required(login_url='../../memberarea/signin')
+def choose_channel_to_show_episodes(request):
+    message = ''
+    channels = Channel.objects.all()
+    titles = [channel.title for channel in channels]
+    if not titles:
+        titles = ['No channels to show']
+
+    if request.method == 'POST':
+        if not request.user.is_superuser:
+            if titles[0] != 'No channels to show':
+                request.session['channel_title_for_episode'] = request.POST['channel_titles']
+                return redirect('show_episodes')
+            else:
+                message = 'No channels in the database. Please create channels to continue.'
+
+        else:
+            message = 'This action is unavailable for the admin'
+
+    context = {'titles': titles, 'message': message}
+    return render(request, 'content/choose_channel_for_episodes_form.html', context)
+
+
+@login_required(login_url='../../../memberarea/signin')
+def show_episodes(request):
+    return HttpResponse(request.session['channel_title_for_episode'])
