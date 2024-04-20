@@ -207,7 +207,7 @@ def choose_channel_to_show_episodes(request):
         if not request.user.is_superuser:
             if titles[0] != 'No channels to show':
                 request.session['channel_title_for_episode'] = request.POST['channel_titles']
-                return redirect('show_episodes')
+                return redirect('show_episodes/')
             else:
                 message = 'No channels in the database. Please create channels to continue.'
 
@@ -226,7 +226,7 @@ class ShowEpisodesView(viewsets.ReadOnlyModelViewSet):
         try:
             channel_title = self.request.session['channel_title_for_episode']
         except KeyError:
-            return redirect('choose_channel')
+            raise Exception('404 Error')
 
         channel = Channel.objects.get(title=channel_title)
         return Episode.objects.filter(channel=channel, is_active=True).all()
