@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 
 from member_area.models import Channel
 from .forms import ActivitiesForm, ChooseChannelForActivitiesForm
+from member_area.models import BaseUser
+from .user_activities_handler import UserActivitiesHandler
 
 
 # Create your views here.
@@ -59,7 +61,35 @@ def choose_channel_for_activities_view(request):
 
 @login_required(login_url='../../../../memberarea/signin')
 def like_episodes_view(request):
-    return HttpResponse(request.session['channel_title_for_activities'])
+    try:
+        channel_title = request.session['channel_title_for_activities']
+        if channel_title == '':
+            raise KeyError
+    except KeyError:
+        return redirect('choose_channel_for_activities')
+
+    message = ''
+    username = request.user.username
+    user = BaseUser.objects.get(username=username)
+    user_activities_handler = UserActivitiesHandler(user=user)
+
+    titles = user_activities_handler.get_channel_episodes(channel_title=channel_title)
+
+    if request.method == 'POST':
+        if not request.user.is_superuser:
+            if titles[0] != 'No episodes to show':
+                episode_title = request.POST['episode_titles']
+                message = user_activities_handler.check_like(episode_title=episode_title, channel_title=channel_title)
+
+                request.session['channel_title_for_activities'] = ''
+                redirect('choose_channel_for_activities')
+            else:
+                message = 'Please make sure that there are episodes to choose from'
+        else:
+            message = 'This action is unavailable for the admin'
+
+    context = {'titles': titles, 'message': message}
+    return render(request, 'user_activities/like_episodes_form.html', context)
 
 
 @login_required(login_url='../../../../memberarea/signin')
