@@ -138,3 +138,9 @@ class FollowedChannelsViewSet(viewsets.ReadOnlyModelViewSet):
         username = self.request.user.username
         user = BaseUser.objects.get(username=username)
         return UserSubscribe.objects.filter(user=user, is_subscribed=True).all()
+
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+
+    search_fields = (
+        'channel__title',
+    )
