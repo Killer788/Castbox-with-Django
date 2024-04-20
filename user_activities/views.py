@@ -82,7 +82,6 @@ def like_episodes_view(request):
                 message = user_activities_handler.check_like(episode_title=episode_title, channel_title=channel_title)
 
                 request.session['channel_title_for_activities'] = ''
-                return redirect('choose_channel_for_activities')
             else:
                 message = 'Please make sure that there are episodes to choose from'
         else:
