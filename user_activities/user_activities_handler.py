@@ -1,6 +1,6 @@
 from member_area.models import Channel
 from content.models import Episode
-from .models import Like
+from .models import Like, Playlist
 
 
 class UserActivitiesHandler:
@@ -33,3 +33,17 @@ class UserActivitiesHandler:
                 like_episode.save()
 
         return 'You liked th episode successfully.'
+
+    def create_playlist(self, title):
+        user_playlists = self.user.playlists
+        user_playlist_objects = user_playlists.all()
+        playlist_titles = [playlist.title for playlist in user_playlist_objects]
+        if title in playlist_titles:
+            return 'You already have a playlist with this name. Please choose another name for the playlist'
+
+        Playlist.objects.create(
+            title=title,
+            user=self.user,
+        )
+
+        return 'Playlist created successfully'

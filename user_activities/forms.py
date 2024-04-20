@@ -18,3 +18,7 @@ class ChooseChannelForActivitiesForm(forms.Form):
     )
 
     activity = forms.CharField(label='Activities', widget=forms.Select(choices=ACTIVITY_CHOICES))
+
+
+class CreatePlaylistForm(forms.Form):
+    title = forms.CharField(label='Title', max_length=100)

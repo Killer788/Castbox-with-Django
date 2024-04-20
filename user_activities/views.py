@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 
 from member_area.models import Channel
-from .forms import ActivitiesForm, ChooseChannelForActivitiesForm
+from .forms import ActivitiesForm, ChooseChannelForActivitiesForm, CreatePlaylistForm
 from member_area.models import BaseUser
 from .user_activities_handler import UserActivitiesHandler
 
@@ -98,7 +98,22 @@ def add_episodes_to_playlist_view(request):
 
 @login_required(login_url='../../../memberarea/signin')
 def create_playlist_view(request):
-    return HttpResponse('Create your playlist here')
+    message = ''
+    username = request.user.username
+    user = BaseUser.objects.get(username=username)
+    user_activities_handler = UserActivitiesHandler(user=user)
+
+    form = CreatePlaylistForm()
+    if request.method == 'POST':
+        form = CreatePlaylistForm(request.POST)
+        if form.is_valid() and not request.user.is_superuser:
+            title = form.cleaned_data['title']
+            message = user_activities_handler.create_playlist(title=title)
+        else:
+            message = 'This action is unavailable for the admin'
+
+    context = {'form': form, 'message': message}
+    return render(request, '', context)
 
 
 @login_required(login_url='../../../memberarea/signin')

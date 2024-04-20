@@ -101,7 +101,7 @@ class Like(BaseModelWithUpdatedAt):
 
 
 class Playlist(BaseModelWithIsActive):
-    title = models.CharField(max_length=250, null=False, blank=False, verbose_name='Title')
+    title = models.CharField(max_length=100, null=False, blank=False, verbose_name='Title')
     user = models.ForeignKey(
         BaseUser,
         on_delete=models.PROTECT,
