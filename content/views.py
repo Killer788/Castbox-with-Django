@@ -230,3 +230,15 @@ class ShowEpisodesView(viewsets.ReadOnlyModelViewSet):
 
         channel = Channel.objects.get(title=channel_title)
         return Episode.objects.filter(channel=channel, is_active=True).all()
+
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
+
+    filterset_fields = (
+        'created_at',
+        'updated_at',
+    )
+    search_fields = (
+        'id',
+        'title',
+        'description',
+    )
