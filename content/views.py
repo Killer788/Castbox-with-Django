@@ -1,10 +1,14 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from rest_framework import viewsets, filters, permissions
+from django_filters.rest_framework import DjangoFilterBackend
 
 from .forms import ChannelAreaActionForm, CreateChannelForm, AddLinkForm, AddEpisodeForm
 from member_area.models import BaseUser, Channel
 from .content_handler import ContentHandler
+from .serializers import ShowEpisodesSerializer
+from .models import Episode
 
 
 # Create your views here.
@@ -214,6 +218,15 @@ def choose_channel_to_show_episodes(request):
     return render(request, 'content/choose_channel_for_episodes_form.html', context)
 
 
-@login_required(login_url='../../../memberarea/signin')
-def show_episodes(request):
-    return HttpResponse(request.session['channel_title_for_episode'])
+class ShowEpisodesView(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ShowEpisodesSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        try:
+            channel_title = self.request.session['channel_title_for_episode']
+        except KeyError:
+            return redirect('choose_channel')
+
+        channel = Channel.objects.get(title=channel_title)
+        return Episode.objects.filter(channel=channel, is_active=True).all()
